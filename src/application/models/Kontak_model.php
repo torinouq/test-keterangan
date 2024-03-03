@@ -14,6 +14,17 @@ class Kontak_model extends CI_Model
         return $this->db->get('telepon')->row();
     }
     public function insert($data) {
+        // return $this->db->insert('telepon', $data);
+        // Cek jika 'id' sudah ada di database
+        $query = $this->db->get_where('telepon', ['id' => $data['id']]);
+        
+        // Jika 'id' sudah ada, jangan lakukan insert dan kembalikan nilai false atau pesan kesalahan
+        if ($query->num_rows() > 0) {
+            // 'id' sudah ada, handle sesuai kebutuhan Anda
+            return false; // atau bisa juga melempar exception atau mengembalikan pesan kesalahan
+        }
+        
+        // Jika 'id' belum ada, lakukan insert
         return $this->db->insert('telepon', $data);
     }
     public function update($id, $data) {

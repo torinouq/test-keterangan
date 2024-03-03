@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 use Basis\Nats\Message\Payload;
+use Basis\Nats\Consumer\Configuration as ConsumerConfiguration;
+use Basis\Nats\Consumer\DeliverPolicy;
 
 class Nats_consumer {
     private $nc;
@@ -19,9 +21,14 @@ class Nats_consumer {
 
         $this->consumer = $s->getConsumer($consumerName);
         
-        $this->consumer->getConfiguration()->setSubjectFilter($streamName . '.' . $subject);
+        $this->consumer->getConfiguration()
+            // ->ephemeral()
+            // ->setDeliverPolicy(DeliverPolicy::NEW)
+            ->setSubjectFilter($streamName . '.' . $subject);
         
         return $this->consumer;
+
+        
         // return $this->consume->create();
         // Mendengarkan pesan
         // Method `handle` akan mendengarkan pesan dan memanggil callback dengan setiap pesan yang diterima

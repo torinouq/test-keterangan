@@ -14,10 +14,9 @@ class Consuming extends RESTController {
     }
 
     function index_get(){
-        $con = $this->consumer->listenStream('KONTAK', 'KONTAK', 'tambah');
+        $con = $this->consumer->listenStream('telepon', 'kontak', 'tambah');
         $con->handle(function($msg) {
-            // Proses pesan yang diterima
-            // return $msg;
+
             $data = json_decode($msg, true);
             $d = [
                 'id' => $data['id'],
@@ -31,28 +30,14 @@ class Consuming extends RESTController {
                     'nama' => $data['nama'],
                     'nomor' => $data['nomor']
                 ];
-                $this->response([
-                    'status' => true,
-                    'message' => 'New kontak has been created',
-                    'data' => $response_data
-                ], RESTController::HTTP_CREATED);
+                echo "\nPesan diterima, id: " . print_r($d['id'], true) . "\n";
+                echo "New kontak has been created\n\n"; // Tampilkan di CLI saja
             } else {
                 // Jika insert gagal
-                $this->response([
-                    'status' => false,
-                    'message' => 'Failed to create new kontak'
-                ], RESTController::HTTP_BAD_REQUEST);
+                echo "\nPesan diterima, id: " . print_r($d['id'], true) . "\n";
+                echo "Failed to create new kontak\n\n"; // Tampilkan di CLI saja
             }
 
-            // Logika pemrosesan lebih lanjut, misalnya menyimpan data ke database, dll.
-            echo "Pesan diterima: " . print_r($data['nama'], true) . "\n";
-
-            // Acknowledge pesan setelah diproses untuk menghindari pengiriman ulang
-            // $msg->ack();
         });
-            // $data = json_decode($con, true);
-            
-            // echo "Pesan diterima: " . print_r($data, true) . "\n";
-            // echo "Pesan diterima: " . print_r($data->nama, true) . "\n";
     }
 }
